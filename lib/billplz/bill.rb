@@ -1,10 +1,13 @@
 module Billplz
   class Bill < Model
-    self.api_url = 'https://www.billplz.com/api/v3/bills'
+    self.api_url = get_api_url
 
-    def create
-      requires!(@payload, :collection_id, :email, :name, :amount, :callback_url)
-      request(:post, @payload)
+    def get_api_url
+      if Rails.env.production?
+        self.api_url = 'https://www.billplz.com/api/v3/bills'
+      else
+        self.api_url = 'https://billplz-staging.herokuapp.com/api/v3/bills'
+      end
     end
 
     def get
